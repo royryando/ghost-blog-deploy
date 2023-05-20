@@ -10,7 +10,7 @@ You may need to set up Nginx (using proxy pass) if you have multiple application
 - Create .env file by copying the example `cp .env.example .env`
 - Adjust environment variables inside .env file
 - Run the container using `docker-compose up` or run in the background with `docker-compose up -d`
-- Done. You can open the app 
+- Done. You can open the app `http://[your-host]/ghost` to get started
 
 ## Backup & Migration
 
