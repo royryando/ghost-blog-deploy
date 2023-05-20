@@ -5,7 +5,7 @@ services:
     restart: always
     depends_on:
       ghost-db:
-        condition: service_started
+        condition: service_healthy
     networks:
       - ghost-network
     ports:
