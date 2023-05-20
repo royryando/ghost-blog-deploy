@@ -1,8 +1,11 @@
 version: '3.1'
 services:
   ghost:
-    image: ghost:4-alpine
+    image: ghost:${GHOST_VERSION}
     restart: always
+    depends_on:
+      ghost-db:
+        condition: service_completed_successfully
     ports:
       - "${APP_PORT}:2368"
     volumes:

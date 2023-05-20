@@ -2,3 +2,4 @@
 ghost-content/
 ghost-db/
 .env
+.DS_Store
