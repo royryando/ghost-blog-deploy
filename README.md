@@ -9,8 +9,18 @@ You may need to set up Nginx (using proxy pass) if you have multiple application
 - Clone this repository `git clone https://github.com/royryando/ghost-blog-deploy.git` or `git clone git@github.com:royryando/ghost-blog-deploy.git`
 - Create .env file by copying the example `cp .env.example .env`
 - Adjust environment variables inside .env file
+- You might want to change config.json, or you can just use as it is
 - Run the container using `docker-compose up` or run in the background with `docker-compose up -d`
-- Done. You can open the app `http://[your-host]/ghost` to get started
+- Done. You can open the app `http://[your-host]:[port]/ghost` to get started
+- To stop: `docker-compose down`
+- To restart: `docker-compose restart`
+- This docker compose will create 2 containers (db & app):
+  - **ghost_blog**_app
+  - **ghost_blog**_db
+
+  *Note that you can change **ghost_blog** in the .env `CONTAINER_SLUG` 
+  
+  With this you can do docker commands like `docker restart ghost_blog_app` to restart only the application (usually after editing config), and more.
 
 ## Use with Nginx Reverse-Proxy
 
@@ -35,6 +45,7 @@ server {
 
 ## Backup & Restore
 
-When you want to backup or restore the app you just need to save these directory:
-- `./ghost-content/` -> Ghost content
-- `./ghost-db/` -> Ghost mysql data
+When you want to backup or restore the app you just need to `data` directory which contains:
+- `./data/ghost-config/` -> Ghost config (a.k.a config.production.json or config.development.json)
+- `./data/ghost-content/` -> All Ghost content
+- `./data/mysql-data/` -> Ghost mysql data

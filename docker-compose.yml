@@ -2,16 +2,18 @@ version: '3.1'
 services:
   ghost:
     image: ghost:${GHOST_VERSION}
-    restart: always
+    container_name: ${CONTAINER_SLUG}_app
+    restart: unless-stopped
     depends_on:
       ghost-db:
         condition: service_healthy
     networks:
       - ghost-network
     ports:
-      - "${APP_PORT}:2368"
+      - "${CONTAINER_PORT}:2368"
     volumes:
-      - "./ghost-content:/var/lib/ghost/content"
+      - "./data/ghost-content:/var/lib/ghost/content"
+      - "./data/ghost-config/config.json:/var/lib/ghost/config.production.json:z"
     environment:
       # see https://ghost.org/docs/config/#configuration-options
       database__client: mysql
@@ -19,22 +21,20 @@ services:
       database__connection__user: root
       database__connection__password: ${DB_PASSWORD}
       database__connection__database: ${DB_NAME}
-      # this url value is just an example, and is likely wrong for your environment!
-      url: ${APP_URL}
-      # contrary to the default mentioned in the linked documentation, this image defaults to NODE_ENV=production (so development mode needs to be explicitly specified if desired)
-      NODE_ENV: ${APP_ENV}
+      NODE_ENV: production
 
   ghost-db:
     image: mysql:8.0
-    restart: always
+    container_name: ${CONTAINER_SLUG}_db
+    restart: unless-stopped
     networks:
       - ghost-network
     volumes:
-      - "./ghost-db:/var/lib/mysql"
+      - "./data/mysql-data:/var/lib/mysql"
     healthcheck:
       test: [ "CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]
       interval: 5s
-      timeout: 20s
+      timeout: 1m
       retries: 30
     environment:
       MYSQL_DATABASE: ghost
